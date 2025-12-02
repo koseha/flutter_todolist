@@ -24,6 +24,12 @@ class _TodoListState extends State<TodoList> {
     });
   }
 
+  void deleteTask(int index) {
+    setState(() {
+      todos.removeAt(index);
+    });
+  }
+
   void saveNewTask() {
     setState(() {
       todos.add([_newTaskController.text, false]);
@@ -67,6 +73,7 @@ class _TodoListState extends State<TodoList> {
             todo: todos[index][0],
             isCompleted: todos[index][1],
             onTap: (value) => checkboxChanged(value, index),
+            onDelete: (context) => deleteTask(index),
           );
         },
       ),
