@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:hive_flutter/hive_flutter.dart';
 import 'package:flutter_todolist/features/todo_tile.dart';
 import 'package:flutter_todolist/features/dialog_box.dart';
+import 'package:flutter_todolist/models/todo.dart';
 
 class TodoList extends StatefulWidget {
   const TodoList({super.key});
@@ -11,28 +13,42 @@ class TodoList extends StatefulWidget {
 
 class _TodoListState extends State<TodoList> {
   final TextEditingController _newTaskController = TextEditingController();
+  late Box<Todo> todoBox;
 
-  List<List<dynamic>> todos = [
-    ['Make Tutorial', false],
-    ['Do Exercise', false],
-    ['Buy Groceries', true],
-  ];
+  @override
+  void initState() {
+    super.initState();
+    todoBox = Hive.box<Todo>('todos');
+
+    // 초기 데이터가 비어있으면 기본 데이터 추가
+    if (todoBox.isEmpty) {
+      todoBox.addAll([
+        Todo(task: 'Make Tutorial', isCompleted: false),
+        Todo(task: 'Do Exercise', isCompleted: false),
+        Todo(task: 'Buy Groceries', isCompleted: true),
+      ]);
+    }
+  }
 
   void checkboxChanged(bool? value, int index) {
     setState(() {
-      todos[index][1] = value ?? false;
+      final todo = todoBox.getAt(index);
+      if (todo != null) {
+        todo.isCompleted = value ?? false;
+        todo.save();
+      }
     });
   }
 
   void deleteTask(int index) {
     setState(() {
-      todos.removeAt(index);
+      todoBox.deleteAt(index);
     });
   }
 
   void saveNewTask() {
     setState(() {
-      todos.add([_newTaskController.text, false]);
+      todoBox.add(Todo(task: _newTaskController.text, isCompleted: false));
       _newTaskController.clear();
     });
     Navigator.pop(context);
@@ -66,14 +82,22 @@ class _TodoListState extends State<TodoList> {
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
         child: Icon(Icons.add, color: Colors.white),
       ),
-      body: ListView.builder(
-        itemCount: todos.length,
-        itemBuilder: (context, index) {
-          return TodoTile(
-            todo: todos[index][0],
-            isCompleted: todos[index][1],
-            onTap: (value) => checkboxChanged(value, index),
-            onDelete: (context) => deleteTask(index),
+      body: ValueListenableBuilder<Box<Todo>>(
+        valueListenable: todoBox.listenable(),
+        builder: (context, box, _) {
+          return ListView.builder(
+            itemCount: box.length,
+            itemBuilder: (context, index) {
+              final todo = box.getAt(index);
+              if (todo == null) return const SizedBox.shrink();
+
+              return TodoTile(
+                todo: todo.task,
+                isCompleted: todo.isCompleted,
+                onTap: (value) => checkboxChanged(value, index),
+                onDelete: (context) => deleteTask(index),
+              );
+            },
           );
         },
       ),

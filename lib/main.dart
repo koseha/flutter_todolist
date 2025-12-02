@@ -1,7 +1,20 @@
 import 'package:flutter/material.dart';
+import 'package:hive_flutter/hive_flutter.dart';
 import 'package:flutter_todolist/features/todo_list.dart';
+import 'package:flutter_todolist/models/todo.dart';
 
-void main() {
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+
+  // Hive 초기화
+  await Hive.initFlutter();
+
+  // TodoAdapter 등록
+  Hive.registerAdapter(TodoAdapter());
+
+  // Todo Box 열기
+  await Hive.openBox<Todo>('todos');
+
   runApp(const MyApp());
 }
 

@@ -22,6 +22,7 @@ class TodoTile extends StatelessWidget {
       child: Slidable(
         endActionPane: ActionPane(
           motion: StretchMotion(),
+          extentRatio: 0.2,
           children: [
             SlidableAction(
               onPressed: onDelete,
