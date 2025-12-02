@@ -7,17 +7,17 @@ Flutter로 개발된 간단하고 직관적인 할 일 관리 앱입니다. Hive
 ### ✅ 할 일 추가
 플로팅 액션 버튼을 통해 새로운 할 일을 추가할 수 있습니다. 다이얼로그를 통해 할 일 내용을 입력하고 저장합니다.
 
-![할 일 추가](readme/add.gif)
+<img src="readme/add.gif" width="300" alt="할 일 추가">
 
 ### ✅ 완료 상태 토글
 체크박스를 탭하여 할 일의 완료 상태를 변경할 수 있습니다. 완료된 할 일은 취소선으로 표시됩니다.
 
-![완료 상태 토글](readme/toggle.gif)
+<img src="readme/toggle.gif" width="300" alt="완료 상태 토글">
 
 ### ✅ 할 일 삭제
 할 일 항목을 왼쪽으로 스와이프하면 삭제 버튼이 나타나며, 이를 통해 할 일을 삭제할 수 있습니다.
 
-![할 일 삭제](readme/delete.gif)
+<img src="readme/delete.gif" width="300" alt="할 일 삭제">
 
 ## 기술 스택
 
